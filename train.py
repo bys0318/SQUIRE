@@ -257,7 +257,6 @@ def train(args):
                     % (iter_epoch[0], iter_epoch[1], iter_epoch[2])
                     )
     steps = 0
-    (src_lines, tgt_lines) = iter_trainer.get_iter(model, 2)
     for epoch in range(args.num_epoch):
         if args.iter:
             if curr_iter_epoch == 0: # start next iteration
