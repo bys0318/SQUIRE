@@ -1,6 +1,6 @@
 ## SQUIRE: A Sequence-to-sequence Framework for Multi-hop Knowledge Graph Reasoning
 
-This is the official codebase of the **SQUIRE** <img src="figs/squire.gif" alt="drawing" width="40"/>framework for multi-hop reasoning, proposed in [SQUIRE: A Sequence-to-sequence Framework for Multi-hop Knowledge Graph Reasoning](https://github.com/bys0318/SQUIRE).
+This is the official codebase of the **SQUIRE** <img src="figs/squire.gif" alt="drawing" width="40"/>framework for multi-hop reasoning, proposed in [SQUIRE: A Sequence-to-sequence Framework for Multi-hop Knowledge Graph Reasoning](https://arxiv.org/abs/2201.06206).
 
 ## Overview
 We present **SQUIRE**, the first **S**e**q**uence-to-sequence based m**u**lt**i**-hop **re**asoning framework, which utilizes an encoder-decoder structure to translate the triple query to a multi-hop path. Here is an overview of our model architecture:
