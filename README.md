@@ -64,3 +64,16 @@ CUDA_VISIBLE_DEVICES=0 python train.py --dataset NELL23K --embedding-dim 256 --h
     --no-filter-gen --label-smooth 0.25 --encoder --save-interval 10 --l-punish --trainset "6_rev_rule" \
     --prob 0.15 --beam-size 512 --test-batch-size 4 --iter --iter-batch-size 32
 ```
+
+## Citation
+
+Please cite our paper if you use our method or dataset in your work (Bibtex below).
+
+```bibtex
+@inproceedings{bai2022squire,
+   title={SQUIRE: A Sequence-to-sequence Framework for Multi-hop Knowledge Graph Reasoning},
+   author={Bai, Yushi and Lv, Xin and Li, Juanzi and Hou, Lei and Qu, Yincen and Dai, Zelin and Xiong, Feiyu},
+   booktitle={EMNLP},
+   year={2022}
+}
+```
