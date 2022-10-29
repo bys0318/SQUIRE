@@ -67,7 +67,7 @@ CUDA_VISIBLE_DEVICES=0 python train.py --dataset NELL23K --embedding-dim 256 --h
 
 ## Citation
 
-Please cite our paper if you use our method or dataset in your work (Bibtex below).
+Please cite our paper if you use our method in your work (Bibtex below).
 
 ```bibtex
 @inproceedings{bai2022squire,
