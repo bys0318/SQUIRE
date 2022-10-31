@@ -12,6 +12,7 @@ from tqdm import tqdm
 import logging
 import transformers
 from iterative_training import Iter_trainer
+import math
 
 def get_args():
     parser = argparse.ArgumentParser()
@@ -43,6 +44,7 @@ def get_args():
     parser.add_argument("--smart-filter", default=False, action="store_true") # more space consumed, less time; switch on when --filter-gen
     parser.add_argument("--warmup", default=3, type=float) # warmup steps ratio
     parser.add_argument("--self-consistency", default=False, action="store_true") # self-consistency
+    parser.add_argument("--output-path", default=False, action="store_true") # output top correct path in a file (for interpretability evaluation)
     args = parser.parse_args()
     return args
 
@@ -57,6 +59,7 @@ def evaluate(model, dataloader, device, args, true_triples=None, valid_triples=N
     eos = model.dictionary.eos()
     bos = model.dictionary.bos()
     rev_dict = dict()
+    lines = []
     for k in model.dictionary.indices.keys():
         v = model.dictionary.indices[k]
         rev_dict[v] = k
@@ -148,12 +151,18 @@ def evaluate(model, dataloader, device, args, true_triples=None, valid_triples=N
                                 prob = lprob[i][j].item()
                             lprob[i][j] -= 10000
                             if candidate not in candidates[i]:
-                                candidates[i][candidate] = prob
+                                if args.self_consistency:
+                                    candidates[i][candidate] = math.exp(prob)
+                                else:
+                                    candidates[i][candidate] = prob
                                 candidates_path[i][candidate] = prefix[i][j].cpu().numpy()
                             else:
                                 if prob > candidates[i][candidate]:
                                     candidates_path[i][candidate] = prefix[i][j].cpu().numpy()
-                                candidates[i][candidate] = max(candidates[i][candidate], prob)
+                                if args.self_consistency:
+                                    candidates[i][candidate] += math.exp(prob)
+                                else:
+                                    candidates[i][candidate] = max(candidates[i][candidate], prob)
                 # no <end> but reach max_len
                 if l == max_len-1:
                     for i in range(batch_size):
@@ -164,12 +173,18 @@ def evaluate(model, dataloader, device, args, true_triples=None, valid_triples=N
                             else:
                                 prob = lprob[i][j].item()
                             if candidate not in candidates[i]:
-                                candidates[i][candidate] = prob
+                                if args.self_consistency:
+                                    candidates[i][candidate] = math.exp(prob)
+                                else:
+                                    candidates[i][candidate] = prob
                                 candidates_path[i][candidate] = prefix[i][j].cpu().numpy()
                             else:
                                 if prob > candidates[i][candidate]:
-                                    candidates_path[i][candidate] = prefix[i][j].cpu().numpy()                                
-                                candidates[i][candidate] = max(candidates[i][candidate], prob)
+                                    candidates_path[i][candidate] = prefix[i][j].cpu().numpy()
+                                if args.self_consistency:
+                                    candidates[i][candidate] += math.exp(prob)
+                                else:                             
+                                    candidates[i][candidate] = max(candidates[i][candidate], prob)
             target = samples["target"].cpu()
             for i in range(batch_size):
                 hid = samples["source"][i][1].item()
@@ -192,8 +207,14 @@ def evaluate(model, dataloader, device, args, true_triples=None, valid_triples=N
                 candidate_path = [pair[1][1] for pair in candidate_]
                 candidate = torch.from_numpy(np.array(candidate))
                 ranking = (candidate[:] == target[i]).nonzero()
+                path_token = rev_dict[hid] + " " + rev_dict[rid] + " " + rev_dict[target[i].item()] + '\t'
+
                 if ranking.nelement() != 0:
                     path = candidate_path[ranking]
+                    for token in path[1:-1]:
+                        path_token += (rev_dict[token]+' ')
+                    path_token += (rev_dict[path[-1]]+'\t')
+                    path_token += str(ranking.item())
                     ranking = 1 + ranking.item()
                     mrr += (1 / ranking)
                     hit += 1
@@ -203,7 +224,13 @@ def evaluate(model, dataloader, device, args, true_triples=None, valid_triples=N
                         hit3 += 1
                     if ranking <= 10:
                         hit10 += 1
-
+                else:
+                    path_token += "wrong"
+                lines.append(path_token+'\n')
+    
+    if args.output_path:
+        with open("test_output_squire.txt", "w") as f:
+            f.writelines(lines)
     logging.info("[MRR: %f] [Hit@1: %f] [Hit@3: %f] [Hit@10: %f]" % (mrr/count, hit1/count, hit3/count, hit10/count))
     return hit/count, hit1/count, hit3/count, hit10/count
 
