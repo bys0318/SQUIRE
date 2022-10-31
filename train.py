@@ -15,33 +15,34 @@ from iterative_training import Iter_trainer
 
 def get_args():
     parser = argparse.ArgumentParser()
-    parser.add_argument("--embedding-dim", default=256, type=int) # 512
-    parser.add_argument("--hidden-size", default=512, type=int) # 512
-    parser.add_argument("--num-layers", default=6, type=int) # 6
-    parser.add_argument("--batch-size", default=1024, type=int) # 64
-    parser.add_argument("--test-batch-size", default=16, type=int) # 16
-    parser.add_argument("--lr", default=1e-4, type=float) # 1e-4
-    parser.add_argument("--dropout", default=0.1, type=float) # 0.1
-    parser.add_argument("--weight-decay", default=0, type=float) #1e-3
+    parser.add_argument("--embedding-dim", default=256, type=int)
+    parser.add_argument("--hidden-size", default=512, type=int)
+    parser.add_argument("--num-layers", default=6, type=int)
+    parser.add_argument("--batch-size", default=1024, type=int)
+    parser.add_argument("--test-batch-size", default=16, type=int)
+    parser.add_argument("--lr", default=1e-4, type=float)
+    parser.add_argument("--dropout", default=0.1, type=float)
+    parser.add_argument("--weight-decay", default=0, type=float)
     parser.add_argument("--num-epoch", default=20, type=int)
     parser.add_argument("--save-interval", default=10, type=int)
     parser.add_argument("--save-dir", default="model_1")
-    parser.add_argument("--ckpt", default="ckpt_29.pt")
+    parser.add_argument("--ckpt", default="ckpt_30.pt")
     parser.add_argument("--dataset", default="FB15K237")
-    parser.add_argument("--label-smooth", default=0.5, type=float) # 0.5
+    parser.add_argument("--label-smooth", default=0.5, type=float)
     parser.add_argument("--l-punish", default=False, action="store_true") # during generation, add punishment for length
     parser.add_argument("--beam-size", default=128, type=int) # during generation, beam size
     parser.add_argument("--no-filter-gen", default=False, action="store_true") # during generation, not filter unreachable next token
     parser.add_argument("--test", default=False, action="store_true") # for test mode
     parser.add_argument("--encoder", default=False, action="store_true") # only use TransformerEncoder
-    parser.add_argument("--trainset", default="6_rev_rule") # FB15K237: "6_rev", "60", "30_rev", FB15K237-10: "30", "30_rev"
+    parser.add_argument("--trainset", default="6_rev_rule")
     parser.add_argument("--loop", default=False, action="store_true") # add self-loop instead of <eos>
     parser.add_argument("--prob", default=0, type=float) # ratio of replaced token
     parser.add_argument("--max-len", default=3, type=int) # maximum number of hops considered
     parser.add_argument("--iter", default=False, action="store_true") # switch for iterative training
-    parser.add_argument("--iter-batch-size", default=128, type=int) # FB15K237, codex-m: 128; NELL995: 32
+    parser.add_argument("--iter-batch-size", default=128, type=int)
     parser.add_argument("--smart-filter", default=False, action="store_true") # more space consumed, less time; switch on when --filter-gen
     parser.add_argument("--warmup", default=3, type=float) # warmup steps ratio
+    parser.add_argument("--self-consistency", default=False, action="store_true") # self-consistency
     args = parser.parse_args()
     return args
 
