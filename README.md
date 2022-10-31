@@ -30,7 +30,8 @@ python utils.py --dataset FB15K237 --gen-train-data --num 6 --out 6_rev_rule --m
 Note that we are currently using BFS to search for query-path pairs in training set, which might take up to an hour on our experiment datasets. We are planning to optimize our code for speed-up.
 
 #### Training and Evaluation
-The following commands train and evaluate (on link prediction) SQUIRE model on all four datasets with GPU 0, where '--iter' is added to apply *iterative training* strategy during training. Check argparse configuration at `train.py` for details about each argument.
+The following commands train and evaluate (on link prediction) SQUIRE model on all four datasets with GPU 0, where `--iter` is added to apply *iterative training* strategy during training. Check argparse configuration at `train.py` for details about each argument.
+Remember to tune the vital hyperparameters, including `lr`, `num-epoch`, `label-smooth` and `prob`, so that SQUIRE can achieve promising performance on new datasets.
 
 **FB15K237**
 ```
@@ -64,7 +65,7 @@ CUDA_VISIBLE_DEVICES=0 python train.py --dataset NELL23K --embedding-dim 256 --h
     --prob 0.15 --beam-size 512 --test-batch-size 4 --iter --iter-batch-size 32
 ```
 
-For evaluation (for example, on FB15K237), simply run the following command. To apply *self-consistency*, add '-self-consistency' command and keep beam_size = 512. Add '-output-path' command to observe the top generated correct path by SQUIRE.
+To evaluate a trained model (for example, on FB15K237), run the following command. To apply *self-consistency*, add `--self-consistency` command and keep `beam_size = 512`. Add `--output-path` command to observe the top generated correct path by SQUIRE.
 ```
 CUDA_VISIBLE_DEVICES=0 python train.py --test --dataset FB15K237 --beam-size 256 --save-dir "model_1" --ckpt "ckpt_30.pt" --test-batch-size 8 --encoder --l-punish --no-filter-gen
 ```
