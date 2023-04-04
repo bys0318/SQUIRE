@@ -23,7 +23,7 @@ If using *rule-enhanced learning*, first generate mapping files by running:
 ```
 python utils.py --dataset FB15K237 --gen-mapping --gen-eval-data
 ```
-Then, our model utilizes [AnyBURL](https://web.informatik.uni-mannheim.de/AnyBURL/) to mine logical rules. We provide a convenient script `run.sh` under `AnyBURL/` for mining and filtering high confidence rules (please modify the dataset name in `run.sh` and `config-learn.properties`). The above step helps generate `rule.dict` containing high quality rules under the dataset folder, then go to `data/` folder and run:
+Then, our model utilizes [AnyBURL](https://web.informatik.uni-mannheim.de/AnyBURL/) to mine logical rules. We provide a convenient script `run.sh` under `AnyBURL/` for mining and filtering high confidence rules (please modify the dataset name in `run.sh` and `config-learn.properties`). The above step helps generate `rule.dict` containing high quality rules under the dataset folder, or alternatively you can use the `rule.dict` files we've already generated for you. Then go to `data/` folder and run:
 ```
 python utils.py --dataset FB15K237 --gen-train-data --num 6 --out 6_rev_rule --max-len 3 --rule
 ```
