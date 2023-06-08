@@ -65,7 +65,7 @@ CUDA_VISIBLE_DEVICES=0 python train.py --dataset NELL23K --embedding-dim 256 --h
     --prob 0.15 --beam-size 512 --test-batch-size 4 --iter --iter-batch-size 32
 ```
 
-To evaluate a trained model (for example, on FB15K237), run the following command. To apply *self-consistency*, add `--self-consistency` command and keep `beam_size = 512`. Add `--output-path` command to observe the top generated correct path by SQUIRE.
+To evaluate a trained model (for example, on FB15K237), run the following command. To apply *self-consistency*, add `--self-consistency` command and keep `beam_size = 512`. Add `--output-path` command to observe the top generated correct path by SQUIRE. Remember to modify the --dataset to your desired test dataset name.
 ```
 CUDA_VISIBLE_DEVICES=0 python train.py --test --dataset FB15K237 --beam-size 256 --save-dir "model_1" --ckpt "ckpt_30.pt" --test-batch-size 8 --encoder --l-punish --no-filter-gen
 ```
